@@ -37,7 +37,6 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
     _transfer(msg.sender,recipient,amout);
     return true;
   }
-  
   function _transfer(address sender,address recipient,uint256 amount) internal {
     require(sender != address(0), "ERC20:transfer from the zero address");
     require(recipient != address(0),"ERC20:teansfer to the zero address");
@@ -45,6 +44,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
     _balances[recipient] = _balances[recipient].add(amount);
     emit Transfer(sender,recipient,amount);
   }
+
 
   function approve(address spender,uint256 value)public override returns (bool){
     _approve(msg.sender,spender,value);

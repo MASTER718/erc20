@@ -61,7 +61,6 @@ export default {
     await this.initWeb3Account()
     await this.initContract()
     await this.getbalance()
-
   },
 
   methods: {
@@ -79,7 +78,6 @@ export default {
       this.web3 = new Web3(this.provider)
 
       this.account = await this.web3.eth.getAccounts()
-      
     },
 
     //  初始化合约实例
@@ -317,8 +315,9 @@ export default {
           type: 'function'
         }
       ]
-      let contractAddress = '0x035167A41CBeeDE23a87B543ca546B1c182437d5'
+      let contractAddress = '0xcd0bDA09622FeaE8AA76b3ec841194b78dB57F49'
       this.contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      console.log('contract.address' + contract.address)
     },
 
     async getbalance() {

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/Users/lulucc/Documents/ERC20/erc20/contracts/Crowdfunding.sol": {
+    "/Users/lulucc/Documents/xzt/erc20/contracts/Crowdfunding.sol": {
       "lastModificationDate": 1634546237969,
       "contentHash": "70e7a55b6b10620ef0004aa5d493e19a",
       "sourceName": "contracts/Crowdfunding.sol",
@@ -35,7 +35,7 @@
         "Crowdfunding"
       ]
     },
-    "/Users/lulucc/Documents/ERC20/erc20/contracts/Migrations.sol": {
+    "/Users/lulucc/Documents/xzt/erc20/contracts/Migrations.sol": {
       "lastModificationDate": 1634546237969,
       "contentHash": "50b3b1dc92806dc8f604fc8c5c65518f",
       "sourceName": "contracts/Migrations.sol",
@@ -69,9 +69,9 @@
         "Migrations"
       ]
     },
-    "/Users/lulucc/Documents/ERC20/erc20/contracts/MyToken.sol": {
-      "lastModificationDate": 1634546237970,
-      "contentHash": "2ee19b3d68e0079dcba0cc254175a364",
+    "/Users/lulucc/Documents/xzt/erc20/contracts/MyToken.sol": {
+      "lastModificationDate": 1634714147133,
+      "contentHash": "bb97ce115bb30e2b74297930999d2a45",
       "sourceName": "contracts/MyToken.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -108,8 +108,8 @@
         "MyToken"
       ]
     },
-    "/Users/lulucc/Documents/ERC20/erc20/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
-      "lastModificationDate": 1634550943476,
+    "/Users/lulucc/Documents/xzt/erc20/node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+      "lastModificationDate": 1634701816949,
       "contentHash": "0eac3e1a83ee62326ca007811285b274",
       "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
       "solcConfig": {
@@ -142,8 +142,8 @@
         "IERC20"
       ]
     },
-    "/Users/lulucc/Documents/ERC20/erc20/node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol": {
-      "lastModificationDate": 1634550943533,
+    "/Users/lulucc/Documents/xzt/erc20/node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol": {
+      "lastModificationDate": 1634701817044,
       "contentHash": "5365090efc586b728719e562ebfed0d6",
       "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
       "solcConfig": {
