@@ -1,6 +1,8 @@
 async function main() {
 
     const [deployer] = await ethers.getSigners();
+    console.log("deployer.address:"+deployer.address)
+    
   
     console.log(
       "Deploying contracts with the account:",
@@ -23,4 +25,3 @@ async function main() {
       console.error(error);
       process.exit(1);
     });
-  
