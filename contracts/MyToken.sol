@@ -94,8 +94,8 @@ contract ERC20Detailed {
 }
 
 
-contract MyToken is ERC20,ERC20Detailed("My Token","MT",4){
+contract MyToken is ERC20,ERC20Detailed("My Token","MT",18){
   constructor() public {
-    _mint(msg.sender,12000000000*10**4);
+    _mint(msg.sender,12000000000*10**18);
   }
 }

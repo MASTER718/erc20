@@ -1,32 +1,13 @@
-# crowdfunding
+# ERC20
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
-
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## 安装依赖
+cnpm install 
 
 
-### Hardhat
+## 部署合约
+
+先替换助记词
+cp env_sample .env
+
+
+npx hardhat run scripts/deploy.js --network goerli

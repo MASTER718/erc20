@@ -30,6 +30,7 @@
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.7",
     "hardhat": "^2.6.6",
+    "dotenv": "^10.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
