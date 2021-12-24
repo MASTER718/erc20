@@ -1,3 +1,8 @@
+const { ethers, network } = require("hardhat");
+
+const { writeAddr } = require('./artifact_log.js');
+
+
 async function main() {
 
     const [deployer] = await ethers.getSigners();
@@ -14,7 +19,9 @@ async function main() {
     const MyToken = await ethers.getContractFactory("MyToken");
     const Mytoken = await MyToken.deploy();
   
-    await Mytoken.deployed();
+    let token = await Mytoken.deployed();
+
+    await writeAddr(token.address, "Mytoken")
   
     console.log("MyToken address:", Mytoken.address);
   }

@@ -1,5 +1,5 @@
 require("@nomiclabs/hardhat-waffle");
-
+require('hardhat-abi-exporter');
 let dotenv = require('dotenv')
 dotenv.config({path:"./.env"})
 
@@ -11,6 +11,15 @@ const mnemonic = process.env.MNEMONIC
  */
 module.exports = {
   solidity: "0.8.0",
+  abiExporter: {
+    path: './deployments/abi',
+    clear: true,
+    flat: true,
+    only: [],
+    spacing: 2,
+    pretty: true,
+  },
+
   networks: {
     dev: {
       url: "http://127.0.0.1:7545"

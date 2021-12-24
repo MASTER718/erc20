@@ -42,6 +42,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
     require(recipient != address(0),"ERC20:teansfer to the zero address");
     _balances[sender] = _balances[sender].sub(amount);
     _balances[recipient] = _balances[recipient].add(amount);
+    
     emit Transfer(sender,recipient,amount);
   }
 
