@@ -23,3 +23,8 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+deployments/1337
+deployments/31337
+deployments/5777
+/artifacts
+/cache/

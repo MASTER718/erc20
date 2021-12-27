@@ -13,6 +13,7 @@
         账户余额
         <input type="text" :value="balance" />
         <br />查询余额
+        <!-- 类型 input 改成了 button -->
         <input type="button" @click="getbalance()" />
         <br />目标地址
         <input type="text" v-model="recipient" />
@@ -26,14 +27,14 @@
 </template>
 
 <!-- 会导出一个全局的变量: ethers -->
-<script src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
-        charset="utf-8"
-        type="text/javascript">
-</script>
-
+<!--
+  <script src="https://cdn.ethers.io/scripts/ethers-v4.min.js"
+          charset="utf-8"
+          type="text/javascript">
+  </script>
+-->
 <script>
-import Web3 from 'web3'
-import contract from 'truffle-contract'
+
 import { ethers } from 'ethers'
 
 export default {
@@ -52,31 +53,83 @@ export default {
       //   joinList: [],
       recipient: null,
       amout: null,
-      balance: null
+      balance: null,
+
+      contractname:null
     }
   },
 
   // 当前Vue组件被创建时回调的hook 函数
   async created() {
-    await this.initWeb3Account()
+    // await this.initWeb3Account()
+    await this.initAccount()
     await this.initContract()
     await this.getbalance()
   },
 
   methods: {
-    // 初始化 web3及账号
-    async initWeb3Account() {
-      console.log('window.etherum' + window.ethereum)
-      if (window.ethereum) {
-        this.provider = window.ethereum
-        try {
-          await window.ethereum.enable()
-        } catch (error) {
-          //   console.log("User denied account access");
-        }
-      }
+    // 初始化账户
+    async initAccount(){
+      if(window.ethereum)
+      {
+        console.log(window.ethereum)
+        try{
+          this.accounts = await window.ethereum.enable()
+          // console.log("accounts:" + this.accounts);
+          this.account = this.accounts[0];
 
-      console.log("this.accout:",this.account)
+          //  this.provider = new ethers.providers.Web3Provider(window.ethereum);
+
+          this.provider = window.ethereum;
+
+
+          this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
+          // console.log(this.provider)
+          // this.networks = await this.provider.getNetwork()
+          // console.log('network ->'+this.network)
+
+          this.chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }));
+        }catch(error){
+          console.log("User denied account access", error)
+        }
+      }else{
+        console.log("Need install MetaMask")
+      }
+    },
+
+    getContract(ContractName){
+
+      // 获取abi和地址 
+      const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
+      const abi = require(`../../deployments/abi/${ContractName}.json`);
+
+      // 输出地址以及abi二进制接口
+      // console.log("addr ->"+addr.address)
+      // console.log("abi ->"+abi)
+
+      // const contractAddress = require(`../../deployments/${this.network.chainId}/${ContractName}.json`);
+      // const abi = require(`../../deployments/abi/${ContractName}.json`);
+
+      //初始化定义contract合约对象
+      // console.log('provide'+ this.provider)
+      // console.log('new ethers.providers.Web3Provider(this.provider)'+ new ethers.providers.Web3Provider(this.provider))
+      // console.log('getSigner'+ new ethers.providers.Web3Provider(this.provider).getSigner())
+    
+      this.contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      // console.log('address '+ addr.address)
+      // console.log('abi' +abi)
+      // console.log('pro ',new ethers.providers.Web3Provider(this.provider).getSigner())
+      let xx ;
+      try{
+        xx = new ethers.Contract(addr.address, abi, this.signer);
+      }catch(err){
+        console.error('xxxxxxx', err)
+
+      }
+      //console.log('contractxxxx', xx)
+
+
+      return xx;
     },
 
     //  初始化合约实例
@@ -84,20 +137,28 @@ export default {
       // const crowdContract = contract(crowd)
       // crowdContract.setProvider(this.provider)
       // this.crowdFund = await crowdContract.deployed()
-      console.log('provider' + this.provider)
-      
-      const contractAddress = require(`../deployments/${this.network.chainId}/${ContractName}.json`);
-      const abi = require(`../../../deployments/abi/${ContractName}.json`);
- 
-      this.contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-      console.log('contract.address' + contract.address)
+      this.mytoken = this.getContract("MyToken")
+      // console.log(this.mytoken)
+      // this.getBalance();
+
+      // console.log('provider' + this.provider)
+      // const contractAddress = require(`../../deployments/${this.network.chainId}/${ContractName}.json`);
+      // const abi = require(`../../deployments/abi/${ContractName}.json`);
+
+      // this.contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      // console.log('321 contract.address' + contract.address)
     },
 
     async getbalance() {
-      console.log("执行了getbalance方法")
-      console.log("this.account[0]:",this.account[0])
-      this.balance = await this.contract.balanceOf(this.account[0])
-      console.log("this.balance:",this.balance)
+      console.log("this.account[0]:"+this.accounts[0])
+       this.balance =  await this.contract.balanceOf(this.accounts[0])
+       console.log(this.balance.toString())
+      // this.balance = this.account[0].balance
+      // this.balance = await this.account[0].balance;
+    },
+
+    getBalance(){
+      
     },
 
     async transfer() {
@@ -118,6 +179,7 @@ export default {
 <style scoped>
 .content {
   font-size: 187 px;
+  
 }
 
 .status {

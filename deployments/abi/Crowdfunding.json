@@ -1,0 +1,10 @@
+[
+  "function author() view returns (address)",
+  "function closed() view returns (bool)",
+  "function endTime() view returns (uint256)",
+  "function joined(address) view returns (uint256)",
+  "function price() view returns (uint256)",
+  "function receive2() payable",
+  "function withdraw()",
+  "function withdrawFund()"
+]

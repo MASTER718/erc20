@@ -54,6 +54,7 @@ contract Crowdfunding {
         require (msg.value >= price, "Bid too low");
         joined[msg.sender] = msg.value;
 
+
         updatePrice();
      }
 
