@@ -21,18 +21,11 @@ module.exports = {
       }
     }
   },
-  abiExporter: {
-    path: './deployments/abi',
-    clear: true,
-    flat: true,
-    only: [],
-    spacing: 2,
-    pretty: true,
-  },
+
 
   networks: {
     dev: {
-     url: "http://127.0.0.1:7545",
+      url: "http://127.0.0.1:7545",
       //url: `HTTP://127.0.0.1:7545/${ALCHEMY_API_KEY}`,
       accounts: [`0x${ROPSTEN_PRIVATE_KEY}`],
       chainId:1337
