@@ -30,7 +30,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.5.2",
-    "hardhat": "^2.8.0",
+    "hardhat": "^2.8.4",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

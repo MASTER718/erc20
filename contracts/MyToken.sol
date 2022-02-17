@@ -1,4 +1,5 @@
 pragma solidity^0.8.0;
+import "hardhat/console.sol";
 
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
 // import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol";
@@ -35,7 +36,18 @@ import "hardhat/console.sol";
 
 
   function transfer(address recipient ,uint256 amout) public override returns(bool){
+ 
+    //修改
+    console.log("Sender balance is %s tokens", _balances[msg.sender]);
+    console.log("Trying to send %s tokens to %s", amout,recipient);
+
+
     _transfer(msg.sender,recipient,amout);
+     
+
+    //修改
+    console.log("Sender balance is %s tokens", _balances[msg.sender]);
+
     return true;
   }
   function _transfer(address sender,address recipient,uint256 amount) internal {
