@@ -17,10 +17,43 @@
         <input type="button" @click="getbalance()" />
         <br />目标地址
         <input type="text" v-model="recipient" />
-        <br />转账金额
+        <br />转账金额（MT）
         <input type="text" v-model="amout" />
         <br />
-        <input type="button" value="转账" @click="transfer" />
+        <input type="button" value="转账" @click="transfer()" />
+        <br />-----------------------------------------------------
+        
+        <!-- 217 当前git版本修改 -->
+        <br />_name:
+        <input type="text" :value="name" />
+        <br />_symbol:
+        <input type="text" :value="symbol" />
+        <br />_decimals:
+        <input type="text" :value="decimals" />
+        <br />total_supply:
+        <input type="text" :value="total_supply" />
+        <br />-----------------------------------------------------
+
+        <!-- 218 当前git版本修改 -->
+        <br />授权地址:
+        <input type="text" v-model="address_authorized" />
+         <br />授权数量:
+        <input type="text" v-model="amount_authorized" />
+        <br />授权
+        <input type="button" @click="authorized()" />
+        <br />查看授权的数量
+        <!--<input type="text"   :value="checkamount" /> -->
+        <input type="button" @click="check()" />
+         <br />-----------------------------------------------------
+
+        
+         <br />地址:
+        <input type="text" v-model="giveaddress" />
+         <br />转入:
+        <input type="text" v-model="money" />
+        <input type="button" value= "~转入"  @click="authorizedd_transfer()" />
+
+
       </div>
     </div>
   </div>
@@ -55,7 +88,20 @@ export default {
       amout: null,
       balance: null,
 
-      contractname:null
+      //修改
+      name: null,
+      symbol:null,
+      decimals:null,
+      total_supply:null,
+      contractname:null,
+      address_authorized:null,
+      amount_authorized:null,
+       
+      //
+      money:null,
+      giveaddress:null,
+
+
     }
   },
 
@@ -65,6 +111,10 @@ export default {
     await this.initAccount()
     await this.initContract()
     await this.getbalance()
+    await this.get_message()
+  
+
+    
   },
 
   methods: {
@@ -81,8 +131,7 @@ export default {
           //  this.provider = new ethers.providers.Web3Provider(window.ethereum);
 
           this.provider = window.ethereum;
-
-
+          
           this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
           // console.log(this.provider)
           // this.networks = await this.provider.getNetwork()
@@ -95,6 +144,8 @@ export default {
       }else{
         console.log("Need install MetaMask")
       }
+        console.log("验证accounts")
+        console.log(this.accounts.toString())
     },
 
     getContract(ContractName){
@@ -115,13 +166,16 @@ export default {
       // console.log('new ethers.providers.Web3Provider(this.provider)'+ new ethers.providers.Web3Provider(this.provider))
       // console.log('getSigner'+ new ethers.providers.Web3Provider(this.provider).getSigner())
     
-      this.contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      this.erc20_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+
+
+      
       // console.log('address '+ addr.address)
       // console.log('abi' +abi)
       // console.log('pro ',new ethers.providers.Web3Provider(this.provider).getSigner())
       let xx ;
       try{
-        xx = new ethers.Contract(addr.address, abi, this.signer);
+        xx = new ethers.erc20_contarct(addr.address, abi, this.signer);
       }catch(err){
         console.error('xxxxxxx', err)
 
@@ -134,7 +188,7 @@ export default {
 
     //  初始化合约实例
     async initContract() {
-      // const crowdContract = contract(crowd)
+      // const crowdContract = erc20_contarct(crowd)
       // crowdContract.setProvider(this.provider)
       // this.crowdFund = await crowdContract.deployed()
       this.mytoken = this.getContract("MyToken")
@@ -145,17 +199,69 @@ export default {
       // const contractAddress = require(`../../deployments/${this.network.chainId}/${ContractName}.json`);
       // const abi = require(`../../deployments/abi/${ContractName}.json`);
 
-      // this.contract = new ethers.Contract(contractAddress, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-      // console.log('321 contract.address' + contract.address)
+      // this.erc20_contarct = new ethers.erc20_contarct(contractAddress, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      // console.log('321 erc20_contarct.address' + erc20_contarct.address)
     },
 
     async getbalance() {
       console.log("this.account[0]:"+this.accounts[0])
-       this.balance =  await this.contract.balanceOf(this.accounts[0])
-       console.log(this.balance.toString())
+       this.balance =  await this.erc20_contarct.balanceOf(this.accounts[0])
+       
+      console.log(this.balance.toString())
+       
       // this.balance = this.account[0].balance
       // this.balance = await this.account[0].balance;
     },
+
+    //得到代币名称
+    async get_message() {
+       this.name         = await  this.erc20_contarct.name()
+       this.symbol       = await  this.erc20_contarct.symbol()
+       this.decimals     = await  this.erc20_contarct.decimals()
+       this.total_supply = await  this.erc20_contarct.totalSupply()
+
+      
+       console.log(this.name.toString())
+       console.log(this.symbol.toString())
+       console.log(this.decimals.toString())
+       console.log(this.total_supply.toString())
+    },
+
+    async authorized() {
+     
+     console.log("开始授权")
+     console.log(this.address_authorized)
+      await this.erc20_contarct.approve(this.address_authorized,this.amount_authorized)
+     console.log("执行成功")
+
+    },
+
+    async check() {
+    
+        //转换为字符串bigbumber
+        let a = await this.erc20_contarct.allowance(this.accounts[0],this.address_authorized)
+        console.log(a.toString())
+    },
+
+    async authorizedd_transfer() {
+      console.log("转账")
+      console.log(this.accounts[0].toString())
+       console.log(this.giveaddress.toString())
+       console.log(this.money.toString())
+
+       
+       this.recent_signer =  new ethers.providers.Web3Provider(this.provider).getSigner()
+
+       //this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
+       await this.erc20_contarct.connect(this.recent_signer).transferFrom(this.accounts[0],this.giveaddress,this.money)
+        
+       
+      console.log("转账成功")
+
+    },
+
+
+
 
     getBalance(){
       
@@ -169,10 +275,12 @@ export default {
 
       //   })
       // this.getbalance();
-      await this.contract.transfer(this.recipient, this.amout * 10 ** 4)
+      await this.erc20_contarct.transfer(this.recipient, ethers.BigNumber.from(this.amout).mul(ethers.BigNumber.from(10)).pow(ethers.BigNumber.from(18)))
       this.getbalance()
-    }
-  }
+    },
+
+
+ }
 }
 </script>
 
