@@ -50,5 +50,15 @@ module.exports = {
       url: `HTTP://127.0.0.1:7545/${ALCHEMY_API_KEY}`,
       accounts: [`0x${ROPSTEN_PRIVATE_KEY}`]
     }
-  }
+  },
+
+  abiExporter: {
+    path: './deployments/abi',
+    runOnCompile: true,
+    clear: true,
+    flat: true,
+    
+    spacing: 2,
+    pretty: true,
+  },
 };

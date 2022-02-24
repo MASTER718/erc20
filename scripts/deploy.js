@@ -15,13 +15,22 @@ async function main() {
   
     const MyToken = await ethers.getContractFactory("MyToken");
     const Mytoken = await MyToken.deploy();
-
-
     let token = await Mytoken.deployed();
- 
-    await writeAddr(token.address, "MyToken")
-  
+    await writeAddr(token.address, "MyToken");
     console.log("MyToken address:", Mytoken.address);
+    console.log("-------------------------------------------------");
+
+
+
+//   修改
+    const Storehouse = await ethers.getContractFactory("Storehouse");
+    const Sh = await Storehouse.deploy(Mytoken.address);
+    
+    let storehouse = await Sh.deployed();
+    await writeAddr(storehouse.address, "Storehouse");
+    console.log("Storehouse address:", Sh.address);
+
+    
   }
   
   main()

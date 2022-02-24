@@ -1,4 +1,5 @@
-pragma solidity =0.8.0;
+// SPDX-License-Identifier: MIT
+pragma solidity^0.8.0;
 
 
 contract Crowdfunding {
@@ -21,7 +22,7 @@ contract Crowdfunding {
     bool public closed = false;
 
     // 部署合约时调用，初始化作者以及众筹结束时间
-    constructor() public {
+    constructor() {
         author = msg.sender;
         endTime = block.timestamp + 1 days;
     }

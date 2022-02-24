@@ -1,4 +1,5 @@
 [
+  "constructor()",
   "function author() view returns (address)",
   "function closed() view returns (bool)",
   "function endTime() view returns (uint256)",

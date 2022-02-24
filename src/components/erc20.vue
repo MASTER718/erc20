@@ -17,14 +17,14 @@
         <input type="button" @click="getbalance()" />
         <br />目标地址
         <input type="text" v-model="recipient" />
-        <br />转账金额（MT）
+        <br />转账金额(MT)
         <input type="text" v-model="amout" />
         <br />
         <input type="button" value="转账" @click="transfer()" />
         <br />-----------------------------------------------------
-        
+       
         <!-- 217 当前git版本修改 -->
-        <br />_name:
+        <!-- <br />_name:
         <input type="text" :value="name" />
         <br />_symbol:
         <input type="text" :value="symbol" />
@@ -32,9 +32,9 @@
         <input type="text" :value="decimals" />
         <br />total_supply:
         <input type="text" :value="total_supply" />
-        <br />-----------------------------------------------------
+        <br />----------------------------------------------------- -->
 
-        <!-- 218 当前git版本修改 -->
+        <!-- 218 当前git版本修改
         <br />授权地址:
         <input type="text" v-model="address_authorized" />
          <br />授权数量:
@@ -42,18 +42,35 @@
         <br />授权
         <input type="button" @click="authorized()" />
         <br />查看授权的数量
-        <!--<input type="text"   :value="checkamount" /> -->
         <input type="button" @click="check()" />
-         <br />-----------------------------------------------------
+         <br />----------------------------------------------------- -->
 
-        
-         <br />地址:
+         <!-- <br />地址:
         <input type="text" v-model="giveaddress" />
          <br />转入:
         <input type="text" v-model="money" />
-        <input type="button" value= "~转入"  @click="authorizedd_transfer()" />
+        <input type="button" value= "~转入"  @click="authorizedd_transfer()" /> -->
 
 
+         <!-- 223 当前git版本修改 -->
+           <br />查询地址:
+          <input type="text" v-model="addr" />  
+          <br />金库余额:
+          <input type="text" :value="amount_224" /> 
+           <input type="button" @click="show()" />
+
+          <br />转入金额:
+          <input type="text" v-model="amount_223" />
+          <input type="button" value= "转入金库"  @click="zhuanru()">
+
+
+
+          <br />转出金额:
+          <input type="text" v-model="amount_0223" />
+          <input type="button" value= "转出金库"  @click="zhuanchu()">
+          
+
+      
       </div>
     </div>
   </div>
@@ -97,9 +114,14 @@ export default {
       address_authorized:null,
       amount_authorized:null,
        
-      //
+      
       money:null,
       giveaddress:null,
+      amount_223:null,
+      amount_0223:null,
+      amount_224:null,
+      addr:null,
+
 
 
     }
@@ -153,7 +175,9 @@ export default {
       // 获取abi和地址 
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
+        // 31337?
 
+     
       // 输出地址以及abi二进制接口
       // console.log("addr ->"+addr.address)
       // console.log("abi ->"+abi)
@@ -167,7 +191,7 @@ export default {
       // console.log('getSigner'+ new ethers.providers.Web3Provider(this.provider).getSigner())
     
       this.erc20_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-
+      
 
       
       // console.log('address '+ addr.address)
@@ -188,10 +212,20 @@ export default {
 
     //  初始化合约实例
     async initContract() {
+      this.recent_signer =  new ethers.providers.Web3Provider(this.provider).getSigner()
+
+      //修改
+      const addr1 = require(`../../deployments/${this.chainId}/Storehouse.json`);
+      const abi1 = require(`../../deployments/abi/Storehouse.json`);
+
+      this.store_contarct = new ethers.Contract(addr1.address, abi1, new ethers.providers.Web3Provider(this.provider).getSigner())
+
+
+
       // const crowdContract = erc20_contarct(crowd)
       // crowdContract.setProvider(this.provider)
       // this.crowdFund = await crowdContract.deployed()
-      this.mytoken = this.getContract("MyToken")
+      this.mytoken = this.getContract("MyToken")                 //?有什么用  this.mytoken
       // console.log(this.mytoken)
       // this.getBalance();
 
@@ -250,7 +284,7 @@ export default {
        console.log(this.money.toString())
 
        
-       this.recent_signer =  new ethers.providers.Web3Provider(this.provider).getSigner()
+       
 
        //this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
        await this.erc20_contarct.connect(this.recent_signer).transferFrom(this.accounts[0],this.giveaddress,this.money)
@@ -260,12 +294,10 @@ export default {
 
     },
 
+    
 
 
-
-    getBalance(){
-      
-    },
+  
 
     async transfer() {
       //   this.crowdFund.transfer(this.recipient, this.amout*10**4, {
@@ -280,7 +312,54 @@ export default {
     },
 
 
- }
+    //git 223更改
+    
+
+    async  zhuanru(){
+
+        
+             console.log("开始转入金库",this.amount_223, this.store_contarct.address) 
+              
+             await this.erc20_contarct.approve(this.store_contarct.address,this.amount_223) 
+
+
+              console.log(this.amount_223) 
+             await this.store_contarct.deposit(this.amount_223)
+             console.log("收款成功")
+             // 是否可以访问
+             console.log(await this.store_contarct.money[this.address_223])
+
+  
+
+    },
+   
+    async zhuanchu(){
+           
+          await this.store_contarct.withdraw(this.amount_0223)
+           console.log("转走成功")
+           // 是否可以访问
+           console.log(this.recent_signer)
+           let a = await this.store_contarct.connect(this.recent_signer).showmoney()
+           console.log(a)
+
+
+
+    },
+
+    async show(){
+     
+     console.log("add",this.addr)
+     this.amount_224 =   await this.store_contarct.showmoney(this.addr)
+     console.log("amount",this.amount_224)
+
+
+    }
+
+
+
+
+
+  }
 }
 </script>
 

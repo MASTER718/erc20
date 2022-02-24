@@ -12,6 +12,7 @@ const writeFile = util.promisify(fs.writeFile);
  * @param {*} name 类型
  */
 async function writeAddr(addr, name){
+
   const chainid = network.config.chainId;
   const saveDir = path.resolve(__dirname, `../deployments/${chainid}/`);
 
@@ -26,8 +27,11 @@ async function writeAddr(addr, name){
 
   await writeFile(deploymentPath, JSON.stringify(deployments, null, 2));
   console.log(`Exported deployments into ${deploymentPath}`);
+
 }
 
 module.exports = {
+
   writeAddr
+  
 }

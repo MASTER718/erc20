@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity^0.8.0;
 import "hardhat/console.sol";
 
@@ -8,7 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "hardhat/console.sol";
+
 
  contract ERC20 is IERC20 {
 
@@ -50,6 +51,7 @@ import "hardhat/console.sol";
 
     return true;
   }
+  
   function _transfer(address sender,address recipient,uint256 amount) internal {
     require(sender != address(0), "ERC20:transfer from the zero address");
     require(recipient != address(0),"ERC20:teansfer to the zero address");
@@ -82,7 +84,10 @@ import "hardhat/console.sol";
     _totalSupply = _totalSupply.add(amount);
     _balances[account] = _balances[account].add(amount);
     emit Transfer(address(0),account,amount);
+
   }
+
+  
 }
 
 
@@ -91,6 +96,10 @@ contract ERC20Detailed {
   string private _name;
   string private _symbol;
   uint8 private _decimals;
+
+
+
+
   constructor (string memory name,string memory symbol,uint8 decimals) {
     _name =name;
     _symbol = symbol;
@@ -109,7 +118,13 @@ contract ERC20Detailed {
 
 
 contract MyToken is ERC20,ERC20Detailed("My Token","MT",18){
-  constructor() public {
+
+
+  constructor()  {
+    
     _mint(msg.sender,12000000000*10**18);
+
   }
+
+
 }

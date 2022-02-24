@@ -1,4 +1,5 @@
 [
+  "constructor(string,string,uint8)",
   "function decimals() view returns (uint8)",
   "function name() view returns (string)",
   "function symbol() view returns (string)"
