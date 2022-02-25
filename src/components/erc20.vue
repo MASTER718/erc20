@@ -10,20 +10,21 @@
       <div>众筹截止时间：{{ endDate }}</div>-->
 
       <div>
-        账户余额
+        <!-- 账户余额
         <input type="text" :value="balance" />
         <br />查询余额
-        <!-- 类型 input 改成了 button -->
+         类型 input 改成了 button -->
+        <!-- 账户余额
         <input type="button" @click="getbalance()" />
         <br />目标地址
         <input type="text" v-model="recipient" />
         <br />转账金额(MT)
         <input type="text" v-model="amout" />
-        <br />
-        <input type="button" value="转账" @click="transfer()" />
+        <br /> -->
+        <!-- <input type="button" value="转账" @click="transfer()" /> -->
         <br />-----------------------------------------------------
        
-        <!-- 217 当前git版本修改 -->
+    
         <!-- <br />_name:
         <input type="text" :value="name" />
         <br />_symbol:
@@ -34,7 +35,7 @@
         <input type="text" :value="total_supply" />
         <br />----------------------------------------------------- -->
 
-        <!-- 218 当前git版本修改
+        <!--
         <br />授权地址:
         <input type="text" v-model="address_authorized" />
          <br />授权数量:
@@ -45,30 +46,39 @@
         <input type="button" @click="check()" />
          <br />----------------------------------------------------- -->
 
-         <!-- <br />地址:
-        <input type="text" v-model="giveaddress" />
+         
+       <!-- <input type="text" v-model="giveaddress" />
          <br />转入:
         <input type="text" v-model="money" />
         <input type="button" value= "~转入"  @click="authorizedd_transfer()" /> -->
 
-
-         <!-- 223 当前git版本修改 -->
-           <br />查询地址:
+         <br />-----------------------------------------------------
+         <br />查询地址:
           <input type="text" v-model="addr" />  
-          <br />金库余额:
-          <input type="text" :value="amount_224" /> 
-           <input type="button" @click="show()" />
+          <br />当前账户MT余额:
+          <input type="text"  :value="amount_MT" /> 
+          <input type="button" @click="showmt()" />
+          <br />当前账户金库余额:
+          <input type="text" :value="amount_bankblance" /> 
+          <input type="button" @click="show_bankblance()" />
+          <br />-----------------------------------------------------
 
-          <br />转入金额:
-          <input type="text" v-model="amount_223" />
-          <input type="button" value= "转入金库"  @click="zhuanru()">
-
-
-
-          <br />转出金额:
-          <input type="text" v-model="amount_0223" />
-          <input type="button" value= "转出金库"  @click="zhuanchu()">
           
+          <br/>授权金额：
+          <input type="text" v-model="author_banknumber"  />
+          <input type="button" @click="authorbank()" />
+          <br/>查看授权数量：
+          <input type="text" :value="allowance_bank"  />
+          <input type="button" @click="show_allowancebank()" />
+
+          
+          <br />转入金库金额:
+          <input type="text" v-model="amount_depositbank" />
+          <input type="button" value= "转入金库"  @click="deposit_bank()">
+          <br />转出金库金额:
+          <input type="text" v-model="amount_withdrawbank" />
+          <input type="button" value= "转出金库"  @click="withdraw_bank()">
+          <br />-----------------------------------------------------    
 
       
       </div>
@@ -99,13 +109,11 @@ export default {
       //   joined: false,
       //   endDate: "null",
       //   isAuthor: true,
-
       //   joinList: [],
       recipient: null,
       amout: null,
       balance: null,
 
-      //修改
       name: null,
       symbol:null,
       decimals:null,
@@ -117,12 +125,13 @@ export default {
       
       money:null,
       giveaddress:null,
-      amount_223:null,
-      amount_0223:null,
-      amount_224:null,
+      amount_depositbank:null,
+      amount_withdrawbank:null,
+      amount_bankblance:null,
       addr:null,
-
-
+      amount_MT:null,
+      allowance_bank:null,
+      author_banknumber:null,
 
     }
   },
@@ -133,10 +142,8 @@ export default {
     await this.initAccount()
     await this.initContract()
     await this.getbalance()
-    await this.get_message()
+    await this.get_erc20token()
   
-
-    
   },
 
   methods: {
@@ -155,7 +162,8 @@ export default {
           this.provider = window.ethereum;
           
           this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
-          // console.log(this.provider)
+           //.log("this.sigenr",this.signer.addres
+           //console.log(this.provider)
           // this.networks = await this.provider.getNetwork()
           // console.log('network ->'+this.network)
 
@@ -175,7 +183,7 @@ export default {
       // 获取abi和地址 
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
-        // 31337?
+    
 
      
       // 输出地址以及abi二进制接口
@@ -191,9 +199,7 @@ export default {
       // console.log('getSigner'+ new ethers.providers.Web3Provider(this.provider).getSigner())
     
       this.erc20_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-      
-
-      
+        
       // console.log('address '+ addr.address)
       // console.log('abi' +abi)
       // console.log('pro ',new ethers.providers.Web3Provider(this.provider).getSigner())
@@ -205,8 +211,6 @@ export default {
 
       }
       //console.log('contractxxxx', xx)
-
-
       return xx;
     },
 
@@ -214,13 +218,12 @@ export default {
     async initContract() {
       this.recent_signer =  new ethers.providers.Web3Provider(this.provider).getSigner()
 
+
       //修改
-      const addr1 = require(`../../deployments/${this.chainId}/Storehouse.json`);
-      const abi1 = require(`../../deployments/abi/Storehouse.json`);
+      const addr_storehouse = require(`../../deployments/${this.chainId}/Storehouse.json`);
+      const abi_storehouse = require(`../../deployments/abi/Storehouse.json`);
 
-      this.store_contarct = new ethers.Contract(addr1.address, abi1, new ethers.providers.Web3Provider(this.provider).getSigner())
-
-
+      this.store_contarct = new ethers.Contract(addr_storehouse.address, abi_storehouse, new ethers.providers.Web3Provider(this.provider).getSigner())
 
       // const crowdContract = erc20_contarct(crowd)
       // crowdContract.setProvider(this.provider)
@@ -248,13 +251,12 @@ export default {
     },
 
     //得到代币名称
-    async get_message() {
+    async get_erc20token() {
        this.name         = await  this.erc20_contarct.name()
        this.symbol       = await  this.erc20_contarct.symbol()
        this.decimals     = await  this.erc20_contarct.decimals()
        this.total_supply = await  this.erc20_contarct.totalSupply()
 
-      
        console.log(this.name.toString())
        console.log(this.symbol.toString())
        console.log(this.decimals.toString())
@@ -270,8 +272,7 @@ export default {
 
     },
 
-    async check() {
-    
+    async check() {   
         //转换为字符串bigbumber
         let a = await this.erc20_contarct.allowance(this.accounts[0],this.address_authorized)
         console.log(a.toString())
@@ -280,86 +281,71 @@ export default {
     async authorizedd_transfer() {
       console.log("转账")
       console.log(this.accounts[0].toString())
-       console.log(this.giveaddress.toString())
-       console.log(this.money.toString())
-
-       
-       
+      console.log(this.giveaddress.toString())
+      console.log(this.money.toString())
 
        //this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
-       await this.erc20_contarct.connect(this.recent_signer).transferFrom(this.accounts[0],this.giveaddress,this.money)
-        
-       
-      console.log("转账成功")
+       await this.erc20_contarct.connect(this.recent_signer).transferFrom(this.accounts[0],this.giveaddress,this.money)   
+       console.log("转账成功")
 
     },
-
-    
-
-
-  
-
+   
     async transfer() {
       //   this.crowdFund.transfer(this.recipient, this.amout*10**4, {
-
       //     from: this.account
       //   }).then(() => {
-
       //   })
       // this.getbalance();
       await this.erc20_contarct.transfer(this.recipient, ethers.BigNumber.from(this.amout).mul(ethers.BigNumber.from(10)).pow(ethers.BigNumber.from(18)))
       this.getbalance()
     },
 
+    async  deposit_bank(){
 
-    //git 223更改
+      console.log("开始转入金库",this.amount_depositbank, this.store_contarct.address)              
+      await this.store_contarct.deposit(this.amount_depositbank)
+      console.log("收款成功")
+
     
-
-    async  zhuanru(){
-
-        
-             console.log("开始转入金库",this.amount_223, this.store_contarct.address) 
-              
-             await this.erc20_contarct.approve(this.store_contarct.address,this.amount_223) 
-
-
-              console.log(this.amount_223) 
-             await this.store_contarct.deposit(this.amount_223)
-             console.log("收款成功")
-             // 是否可以访问
-             console.log(await this.store_contarct.money[this.address_223])
-
-  
-
     },
    
-    async zhuanchu(){
+    async withdraw_bank(){
            
-          await this.store_contarct.withdraw(this.amount_0223)
-           console.log("转走成功")
-           // 是否可以访问
-           console.log(this.recent_signer)
-           let a = await this.store_contarct.connect(this.recent_signer).showmoney()
-           console.log(a)
-
+        await this.store_contarct.withdraw(this.amount_withdrawbank)
+        console.log("转走成功")
 
 
     },
 
-    async show(){
-     
+    async show_bankblance(){
+
      console.log("add",this.addr)
-     this.amount_224 =   await this.store_contarct.showmoney(this.addr)
-     console.log("amount",this.amount_224)
+     this.amount_bankblance =   await this.store_contarct.showmoney(this.addr)
+     console.log("amount",this.amount_bankblance)
+    },
 
+    async showmt(){
 
-    }
+      this.amount_MT = await this.erc20_contarct.balanceOf(this.addr)
+    },
 
+    async authorbank(){   
 
+      await this.erc20_contarct.approve(this.store_contarct.address,this.author_banknumber)
+      console.log("授权成功")
 
+    },
 
+    async show_allowancebank(){
+      console.log(this.store_contarct.address)
+      console.log("当前用户：", await this.recent_signer.getAddress())
+      this.allowance_bank = await this.erc20_contarct.allowance( await this.recent_signer.getAddress(),this.store_contarct.address)
+      // this.allowance_bank = await this.store_contarct.get_allowancebank(this.addr)
+      
+    },
 
   }
+
 }
 </script>
 
