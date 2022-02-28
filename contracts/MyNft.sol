@@ -7,6 +7,7 @@ uint256 public totalSupply = 0;
 
 constructor(string memory name_, string memory symbol_) ERC721(name_, symbol_)
 {}
+//全部来自ERC721
 
 function mint() public {
     totalSupply++;
@@ -21,6 +22,8 @@ function _beforeTokenTransfer(
     address from,
     address to,
     uint256 tokenId
+
+    
 ) internal override {}
 
 

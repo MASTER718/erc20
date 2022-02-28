@@ -295,8 +295,8 @@
       ]
     },
     "/Users/a1234/Desktop/erc20/contracts/MyNft.sol": {
-      "lastModificationDate": 1646025604300,
-      "contentHash": "2d3cb5a3e93a1f809fce26b497ecc86f",
+      "lastModificationDate": 1646034011938,
+      "contentHash": "7e4ed508437cb7d834bd18b26377e85e",
       "sourceName": "contracts/MyNft.sol",
       "solcConfig": {
         "version": "0.8.0",

@@ -9,7 +9,26 @@
           <input type="text" v-model="addr" /> 
           <br/>账户余额：
           <input type="text" :value="addr_blance" />
-          <input type="button" value= "~~~"  @click="Getbalence()">
+          <input type="button" value= "~~"  @click="Getbalence()">
+          <br/>当前账户得到nft：
+          <input type="button" value= "~~"  @click="Getnft()">
+          <br/>当前账户要授权的NftId、地址:
+          <input type="text" v-model="Approve_ID" />
+          <input type="text" v-model="Approve_operator" />
+          <br/><input type="button" value= "~~"  @click="Approve()">
+
+
+          <br/>---------------------------------------------------
+          <br/>查询此ID拥有者：
+          <input type="text" v-model="ID" /> 
+          <input type="button" value= "~~"  @click="GetownerofID()">
+          <br/>拥有者：
+          <input type="text"  :value="ID_owner" /> 
+          <br/>被授权的人：
+          <input type="text"  :value="ID_operator" />
+          <input type="button" value= "~~"  @click="GetoperatorofID()">
+
+
 
 
  
@@ -32,6 +51,12 @@ export default {
        return {
           addr:null,
           addr_blance:null,
+          ID:null,
+          ID_owner:null,
+          ID_operator:null,
+          Approve_ID:null,
+          Approve_operator:null,
+
 
 
 
@@ -44,8 +69,8 @@ export default {
       await this.Initaccount()
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
-      this.nft_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-   
+      this.nft_contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+      
     },
 
     methods:{
@@ -76,9 +101,39 @@ export default {
   
 
       async Getbalence(){
-          this.addr_blance =await this.nft_contarct.balanceOf(this.addr)
+          this.addr_blance =await this.nft_contract.balanceOf(this.addr)
                 
       },  
+
+      async Getnft(){
+          await   this.nft_contract.mint()
+
+      },
+
+      async GetownerofID(){
+          this.ID_owner = await this.nft_contract.ownerOf(this.ID)
+          console.log("ID_owner:",this.ID_owner)
+        
+
+      },
+
+      async GetoperatorofID(){
+        console.log("开始查询")
+        console.log('=======', this.nft_contract)
+        this.ID_operator = await this.nft_contact.getApproved(this.ID)
+        // if (this.ID_operator ==null){
+
+        //   this.ID_operator=0;
+        // }
+      },
+
+      async Approve(){
+
+         await this.nft_contract.approve(this.Approve_operator,this.Approve_ID)
+         console.log("授权成功")
+
+
+      },
 
 
     }
