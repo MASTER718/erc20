@@ -1,0 +1,142 @@
+<template>
+  <div class="content">
+    <div class="status">
+
+      <div>
+          <br/>---------------------------------------------------
+          <br/>-----MyNft
+          <br/>查询地址：
+          <input type="text" v-model="addr" /> 
+          <br/>账户余额：
+          <input type="text" :value="addr_blance" />
+          <input type="button" value= "~~~"  @click="Getbalence()">
+
+
+ 
+        </div>
+    </div>
+  </div>
+</template>
+
+<script>
+
+
+
+import {ethers}  from 'ethers'
+
+export default {
+
+    name:'erc721',
+    data(){
+        //html用到的变量
+       return {
+          addr:null,
+          addr_blance:null,
+
+
+
+       }
+
+    },
+
+     async created(){
+      let ContractName = "MyNft"
+      await this.Initaccount()
+      const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
+      const abi = require(`../../deployments/abi/${ContractName}.json`);
+      this.nft_contarct = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+   
+    },
+
+    methods:{
+
+    async Initaccount(){
+        if(window.ethereum)
+        {
+          console.log(window.ethereum)
+          try{
+
+            this.accounts = await window.ethereum.enable()
+            this.account = this.accounts[0];
+            this.provider = window.ethereum; 
+            this.signer = new ethers.providers.Web3Provider(this.provider).getSigner()
+            this.chainId = parseInt(await window.ethereum.request({ method: 'eth_chainId' }));
+            // 修改？
+          }catch(error){
+            console.log("User denied account access", error)
+          }
+        }else{
+          console.log("Need install MetaMask")
+        }
+          console.log("验证accounts")
+          console.log(this.accounts.toString())
+
+      },
+    
+  
+
+      async Getbalence(){
+          this.addr_blance =await this.nft_contarct.balanceOf(this.addr)
+                
+      },  
+
+
+    }
+
+}
+
+</script>
+
+
+<style scoped>
+.content {
+  font-size: 187 px;
+  
+}
+
+.status {
+  margin: 20px;
+}
+
+.card-bkg {
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border-radius: 5px;
+  padding: 11px;
+}
+
+.award-des {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.award-des span {
+  font-size: 12px;
+}
+
+.award-des b {
+  font-size: 16px;
+}
+
+button {
+  display: inline-block;
+  line-height: 1;
+  border-radius: 4px;
+  padding: 12px 20px;
+  white-space: nowrap;
+  font-weight: 500;
+  border: 1px solid #dcdfe6;
+}
+
+.box {
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  border-radius: 5px;
+  padding: 11px;
+  margin: 10px;
+}
+</style>

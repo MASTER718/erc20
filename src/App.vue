@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <erc20/>
+    <erc721/>
   </div>
 </template>
-
+<!--
 <script>
 import erc20 from './components/erc20.vue'
 
@@ -11,6 +11,20 @@ export default {
   name: 'app',
   components: {
     erc20
+  }
+}
+</script>
+
+-->
+
+
+<script>
+import erc721 from './components/erc721.vue'
+
+export default {
+  name: 'app',
+  components: {
+    erc721
   }
 }
 </script>
