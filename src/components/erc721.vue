@@ -41,15 +41,31 @@
           <br/>被授权的人：
           <input type="text"  :value="ID_operator" />
           <input type="button" value= "~~"  @click="GetoperatorofID()">
+          <br/>---------------------------------------------------
+          <br/>ID-URI对应表
+          <div>
+            <table>
+              <tr v-for="item in this.nfts" :key="item.tokenId">
+                <td>{{item.tokenId}}</td>
+                <td>{{item.tokenURI}}</td>
+              </tr>
+            </table>
+          </div>
 
 
 
 
- 
+
+
+          
+
         </div>
     </div>
   </div>
+
 </template>
+
+
 
 <script>
 
@@ -75,9 +91,14 @@ export default {
           Approve_operator:null,
           NFTID_LIST:null,
           nums:null,
+          number:null,
+          nfts:null,
 
+          // nfts: [
+          // {tokenId:1, tokenURI:'xxx'},
+          // {tokenId:2, tokenURI:'xxx'},
 
-
+          // ]
 
        }
 
@@ -89,7 +110,6 @@ export default {
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
       this.nft_contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
-      
     },
 
     methods:{
@@ -126,6 +146,8 @@ export default {
 
       async Getnft(){
           await   this.nft_contract.mint()
+          await this.Getalllist()
+
 
       },
 
@@ -186,11 +208,31 @@ export default {
       }
       }
       this.NFTID_LIST = list
+      console.log(this.nfts)
 
 
+     },
+       async Getalllist(){
+        let list = []
+        this.number = await this.nft_contract.total()
+
+        if(this.number ==0){
+          list = []
+        }
+        else {
+          for(let i=1;i<=this.nums;i++) {
+
+               let tokenURI = await this.nft_contract.tokenURI(i)
+               list.push({'tokenId':i,'tokenURI':tokenURI})
+               
+
+          }
+
+        }
+        this.nfts = list
+
+      },
     }
-  }
-
 }
 
 </script>
