@@ -5,8 +5,20 @@
       <div>
           <br/>---------------------------------------------------
           <br/>-----MyNft
+         <input type="button" value= "get message"  @click="Getnftmessage()">
+          <br/>名字：
+          <input type="text" :value="name" />
+          <br/>计量单位：
+          <input type="text" :value="symbol" /> 
+          
+          <br/>---------------------------------------------------
+
           <br/>查询地址：
           <input type="text" v-model="addr" /> 
+          <br/>拥有的NFTID：
+          <input type="button" value= "LIST"  @click="Getidlist()">
+          <input type="text" :value="NFTID_LIST" />
+
           <br/>账户余额：
           <input type="text" :value="addr_blance" />
           <input type="button" value= "~~"  @click="Getbalence()">
@@ -21,7 +33,9 @@
           <br/>---------------------------------------------------
           <br/>查询此ID拥有者：
           <input type="text" v-model="ID" /> 
-          <input type="button" value= "~~"  @click="GetownerofID()">
+          <input type="button" value= "~~"  @click="GetownerofID_tokenuri()">
+          <br/>TokenUri：
+          <input type="text" :value="tokenuri" /> 
           <br/>拥有者：
           <input type="text"  :value="ID_owner" /> 
           <br/>被授权的人：
@@ -49,6 +63,9 @@ export default {
     data(){
         //html用到的变量
        return {
+          name:null,
+          symbol:null,
+          tokenuri:null,
           addr:null,
           addr_blance:null,
           ID:null,
@@ -56,6 +73,8 @@ export default {
           ID_operator:null,
           Approve_ID:null,
           Approve_operator:null,
+          NFTID_LIST:null,
+          nums:null,
 
 
 
@@ -75,7 +94,7 @@ export default {
 
     methods:{
 
-    async Initaccount(){
+      async Initaccount(){
         if(window.ethereum)
         {
           console.log(window.ethereum)
@@ -110,9 +129,10 @@ export default {
 
       },
 
-      async GetownerofID(){
+      async GetownerofID_tokenuri(){
           this.ID_owner = await this.nft_contract.ownerOf(this.ID)
           console.log("ID_owner:",this.ID_owner)
+          this.tokenuri = await this.nft_contract.tokenURI(this.ID)
         
 
       },
@@ -120,7 +140,9 @@ export default {
       async GetoperatorofID(){
         console.log("开始查询")
         console.log('=======', this.nft_contract)
-        this.ID_operator = await this.nft_contact.getApproved(this.ID)
+        this.ID_operator = await this.nft_contract.getApproved(this.ID)
+        
+
         // if (this.ID_operator ==null){
 
         //   this.ID_operator=0;
@@ -132,11 +154,42 @@ export default {
          await this.nft_contract.approve(this.Approve_operator,this.Approve_ID)
          console.log("授权成功")
 
+      },
+
+      async Getnftmessage(){
+
+           this.name = await this.nft_contract.name()
+           this.symbol = await this.nft_contract.symbol()
+
 
       },
+      async Getidlist(){
+       
+
+       //使用this可以接收？
+       this.nums = await this.nft_contract.total()
+       console.log("NUMS:",this.nums)
+       let list=[]
+       if(this.nums==0){
+            list = 0
+       }else{
+
+       for(let i=1;i<=this.nums;i++) {
+
+         let add = await this.nft_contract.ownerOf(i)
+          if(add == this.addr){
+          
+           list.push(i)
+
+          }
+              
+      }
+      }
+      this.NFTID_LIST = list
 
 
     }
+  }
 
 }
 

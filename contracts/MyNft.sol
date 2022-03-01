@@ -22,11 +22,15 @@ function _beforeTokenTransfer(
     address from,
     address to,
     uint256 tokenId
-
-    
 ) internal override {}
 
+function total() public view returns (uint) {
 
+
+    return   totalSupply;
+
+
+}
 
 
 
