@@ -4,11 +4,11 @@
 
       <div>
           <br/>---------------------------------------------------
-          <br/>-----MyNft
+          <br/>---------------------MyNft-------------------------
          <input type="button" value= "get message"  @click="Getnftmessage()">
           <br/>名字：
           <input type="text" :value="name" />
-          <br/>计量单位：
+          <br/>symbol:
           <input type="text" :value="symbol" /> 
           
           <br/>---------------------------------------------------
@@ -22,7 +22,7 @@
           <br/>账户余额：
           <input type="text" :value="addr_blance" />
           <input type="button" value= "~~"  @click="Getbalence()">
-          <br/>当前账户得到nft：
+          <br/>mint：
           <input type="button" value= "~~"  @click="Getnft()">
           <br/>当前账户要授权的NftId、地址:
           <input type="text" v-model="Approve_ID" />
@@ -51,7 +51,31 @@
               </tr>
             </table>
           </div>
+          <br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          <br/>~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          <br/>|银行存取                                           |
+          <br/>----------------查询服务----------------------------
+          <br/>查询地址：
+          <input type="text" v-model="bankaddr_search" /> 
+          <br/>余额为：
+          <input type="text"  :value="balance_addr" /> 
+          <input type="button" value= "查询"  @click="search_balence()">
 
+
+
+
+
+
+          <br/>----------------当前账户----------------------------
+          <br/>存钱
+          <input type="text" v-model="deposit_amount" /> 
+          <input type="button" value= "存入"  @click="Deposit()">
+            
+
+          <br/>取钱
+          <input type="text" v-model="withdraw_amount" /> 
+          <input type="button" value= "取出"  @click="Withdraw()">
+    
 
 
 
@@ -69,9 +93,8 @@
 
 <script>
 
+import   {ethers}  from 'ethers'
 
-
-import {ethers}  from 'ethers'
 
 export default {
 
@@ -93,6 +116,11 @@ export default {
           nums:null,
           number:null,
           nfts:null,
+          deposit_amount:null,
+          withdraw_amount:null,
+          bankaddr_search:null,
+          balance_addr:null,
+
 
           // nfts: [
           // {tokenId:1, tokenURI:'xxx'},
@@ -110,6 +138,10 @@ export default {
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
       this.nft_contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+
+      setInterval(async() =>{
+       await  this.Getalllist()
+      },3000)
     },
 
     methods:{
@@ -146,6 +178,7 @@ export default {
 
       async Getnft(){
           await   this.nft_contract.mint()
+          console.log(this.nfts)
           await this.Getalllist()
 
 
@@ -208,7 +241,7 @@ export default {
       }
       }
       this.NFTID_LIST = list
-      console.log(this.nfts)
+      
 
 
      },
@@ -220,7 +253,7 @@ export default {
           list = []
         }
         else {
-          for(let i=1;i<=this.nums;i++) {
+          for(let i=1;i<=this.number;i++) {
 
                let tokenURI = await this.nft_contract.tokenURI(i)
                list.push({'tokenId':i,'tokenURI':tokenURI})
@@ -232,8 +265,28 @@ export default {
         this.nfts = list
 
       },
+
+      async Deposit(){
+
+
+      },
+
+      async Withdraw(){
+
+
+
+      },
+
+      async search_balence(){
+
+
+
+      },
+
+    
     }
 }
+
 
 </script>
 
