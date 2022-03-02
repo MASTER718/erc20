@@ -660,10 +660,10 @@
         "IERC165"
       ]
     },
-    "/Users/a1234/Desktop/erc20/contracts/Store_Nft.sol": {
-      "lastModificationDate": 1646205222740,
-      "contentHash": "6134554b3d1f50169805d3e7c24934a8",
-      "sourceName": "contracts/Store_Nft.sol",
+    "/Users/a1234/Desktop/erc20/contracts/StoreNft.sol": {
+      "lastModificationDate": 1646213259019,
+      "contentHash": "6e37cb9378ed7b8d61bd5bb6ffc50ed4",
+      "sourceName": "contracts/StoreNft.sol",
       "solcConfig": {
         "version": "0.8.0",
         "settings": {
@@ -695,7 +695,7 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "Store_Nft"
+        "StoreNft"
       ]
     }
   }

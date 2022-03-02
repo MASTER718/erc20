@@ -1,5 +1,3 @@
-
-
 const { ethers, network } = require("hardhat");
 const { writeAddr } = require('./artifact_log.js');
 
@@ -27,12 +25,12 @@ async function main() {
 
   //Store_Nft的具体部署
 
-    const Store_Nft = await ethers.getContractFactory("Store_Nft");
-    const Store_nft = await Store_Nft.deploy(nft.address);                //传入
+    const StoreNft = await ethers.getContractFactory("StoreNft");
+    const Store_nft = await StoreNft.deploy(nft.address);                //传入
     let storenft = await Store_nft.deployed();
-    await writeAddr(storenft.address, "Store_Nft");
+    await writeAddr(storenft.address, "StoreNft");
 
-    console.log("Store_Nft address:", storenft.address);
+    console.log("StoreNft address:", storenft.address);
     console.log("验证 deployed address:", Store_nft.address);
     console.log("-------------------------------------------------");
 
