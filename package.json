@@ -6,14 +6,14 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "node" : "npx hardhat node"
-
+    "node": "npx hardhat node"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.3.2",
     "axios": "^0.23.0",
     "core-js": "^3.6.5",
     "hardhat-abi-exporter": "^2.3.0",
+    "node-schedule": "^2.1.0",
     "truffle-contract": "^4.0.31",
     "vue": "^2.6.11",
     "web3": "^1.6.0",

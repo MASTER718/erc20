@@ -256,7 +256,7 @@
       ]
     },
     "/Users/a1234/Desktop/erc20/contracts/Storehouse.sol": {
-      "lastModificationDate": 1646017650784,
+      "lastModificationDate": 1646096761223,
       "contentHash": "5cd91cfccfe4cb0900d3dae422727150",
       "sourceName": "contracts/Storehouse.sol",
       "solcConfig": {
@@ -295,8 +295,8 @@
       ]
     },
     "/Users/a1234/Desktop/erc20/contracts/MyNft.sol": {
-      "lastModificationDate": 1646034011938,
-      "contentHash": "7e4ed508437cb7d834bd18b26377e85e",
+      "lastModificationDate": 1646102069517,
+      "contentHash": "d89317c2a2f105815145aaba414a28c3",
       "sourceName": "contracts/MyNft.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -332,8 +332,8 @@
       ]
     },
     "/Users/a1234/Desktop/erc20/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1646025025655,
-      "contentHash": "1b6efa92e43e3992293e17b904e612fb",
+      "lastModificationDate": 1646126241752,
+      "contentHash": "dc263936e1016f10eacf201f4dd0c37b",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
         "version": "0.8.0",
@@ -658,6 +658,44 @@
       ],
       "artifacts": [
         "IERC165"
+      ]
+    },
+    "/Users/a1234/Desktop/erc20/contracts/Store_Nft.sol": {
+      "lastModificationDate": 1646205222740,
+      "contentHash": "6134554b3d1f50169805d3e7c24934a8",
+      "sourceName": "contracts/Store_Nft.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "hardhat/console.sol",
+        "@openzeppelin/contracts/token/ERC721/ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Store_Nft"
       ]
     }
   }

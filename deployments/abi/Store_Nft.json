@@ -1,0 +1,9 @@
+[
+  "constructor(address)",
+  "function balance_nft(address) view returns (uint256)",
+  "function checkID(uint256) view returns (string)",
+  "function deposit(uint256)",
+  "function oldowner_nft(uint256) view returns (address)",
+  "function shownft(address) view returns (uint256)",
+  "function withdraw(uint256)"
+]
