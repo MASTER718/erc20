@@ -33,9 +33,9 @@
           <br/>---------------------------------------------------
           <br/>查询此ID拥有者：
           <input type="text" v-model="ID" /> 
-          <input type="button" value= "~~"  @click="GetownerofID_tokenuri()">
+          <input type="button" value= "~~"  @click="GetownerofID_nfturi()">
           <br/>TokenUri：
-          <input type="text" :value="tokenuri" /> 
+          <input type="text" :value="nfturi" /> 
           <br/>拥有者：
           <input type="text"  :value="ID_owner" /> 
           <br/>被授权的人：
@@ -44,10 +44,10 @@
           <br/>---------------------------------------------------
           <br/>ID-URI对应表
           <div>
-            <table>
-              <tr v-for="item in this.nfts" :key="item.tokenId">
-                <td>{{item.tokenId}}</td>
-                <td>{{item.tokenURI}}</td>
+            <table border="1" cellpadding="3" cellspacing="0" style="width: 35%;margin:left">
+              <tr v-for="item in this.nfts" :key="item.nftId">
+                <td>{{item.nftId}}</td>
+                <td>{{item.nftURI}}</td>
               </tr>
             </table>
           </div>
@@ -67,13 +67,21 @@
 
 
           <br/>----------------当前账户----------------------------
+          
+          <br/>授权nftID
+          <input type="text" v-model="deposit_nftid" /> 
+          <input type="button" value= "授权"  @click="Approve_deposit()">
           <br/>存钱
-          <input type="text" v-model="deposit_amount" /> 
+          <!-- <input type="text" v-model="deposit_amount" />  -->
           <input type="button" value= "存入"  @click="Deposit()">
             
-
-          <br/>取钱
-          <input type="text" v-model="withdraw_amount" /> 
+          
+          <br/>想要取出的nftID：
+          <input type="text" v-model="withdraw_nftid" />
+          <input type="button" value= "检查"  @click="CheckIdstate()">
+          <br/>检查是否存入：
+          <input type="text" :value="id_bankstate" />
+          <br/>取出nft
           <input type="button" value= "取出"  @click="Withdraw()">
     
 
@@ -102,9 +110,10 @@ export default {
     data(){
         //html用到的变量
        return {
+
           name:null,
           symbol:null,
-          tokenuri:null,
+          nfturi:null,
           addr:null,
           addr_blance:null,
           ID:null,
@@ -117,14 +126,17 @@ export default {
           number:null,
           nfts:null,
           deposit_amount:null,
-          withdraw_amount:null,
+          //withdraw_amount:null,
           bankaddr_search:null,
           balance_addr:null,
+          deposit_nftid:null,
+          withdraw_nftid:null,
+          id_bankstate:null,
 
 
           // nfts: [
-          // {tokenId:1, tokenURI:'xxx'},
-          // {tokenId:2, tokenURI:'xxx'},
+          // {nftId:1, nftURI:'xxx'},
+          // {nftId:2, nftURI:'xxx'},
 
           // ]
 
@@ -138,6 +150,10 @@ export default {
       const addr = require(`../../deployments/${this.chainId}/${ContractName}.json`);
       const abi = require(`../../deployments/abi/${ContractName}.json`);
       this.nft_contract = new ethers.Contract(addr.address, abi, new ethers.providers.Web3Provider(this.provider).getSigner())
+     
+      this.addr1 = require(`../../deployments/${this.chainId}/Store_Nft.json`);
+      const abi1 = require(`../../deployments/abi/Store_Nft.json`);
+      this.nftstore_contract = new ethers.Contract(this.addr1.address, abi1, new ethers.providers.Web3Provider(this.provider).getSigner())
 
       setInterval(async() =>{
        await  this.Getalllist()
@@ -184,10 +200,10 @@ export default {
 
       },
 
-      async GetownerofID_tokenuri(){
+      async GetownerofID_nfturi(){
           this.ID_owner = await this.nft_contract.ownerOf(this.ID)
           console.log("ID_owner:",this.ID_owner)
-          this.tokenuri = await this.nft_contract.tokenURI(this.ID)
+          this.nfturi = await this.nft_contract.tokenURI(this.ID)
         
 
       },
@@ -255,8 +271,8 @@ export default {
         else {
           for(let i=1;i<=this.number;i++) {
 
-               let tokenURI = await this.nft_contract.tokenURI(i)
-               list.push({'tokenId':i,'tokenURI':tokenURI})
+               let nftURI = await this.nft_contract.tokenURI(i)
+               list.push({'nftId':i,'nftURI':nftURI})
                
 
           }
@@ -266,25 +282,57 @@ export default {
 
       },
 
-      async Deposit(){
+      async CheckIdstate(){
+
+        console.log("开始检查状态")
+        this.id_bankstate = await this.nftstore_contract.checkID(this.withdraw_nftid)
+        console.log(this.id_bankstate)
+        console.log("-------------------------")
+
 
 
       },
 
+      async Approve_deposit(){
+       console.log("授权银行nftid")
+       await this.nft_contract.approve(this.addr1.address,this.deposit_nftid)
+       console.log("授权银行完成")
+       console.log("-------------------------")
+   
+   
+      },
+
+      async Deposit(){
+            console.log("开始存入")
+            await this.nftstore_contract.deposit(this.deposit_nftid)
+            console.log("存入完成")
+            console.log("-------------------------")
+   
+      },
+
       async Withdraw(){
+        
+        console.log("开始取出")
+        await this.nftstore_contract.withdraw(this.withdraw_nftid)
+        console.log("取出完成")
+        console.log("-------------------------")
+
 
 
 
       },
 
       async search_balence(){
-
-
+        console.log("开始查询")
+        this.balance_addr = await this.nftstore_contract.shownft(this.bankaddr_search)
+        console.log("查询完成")
+        console.log("-----------------------")
 
       },
 
     
     }
+
 }
 
 
